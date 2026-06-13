@@ -57,6 +57,7 @@ Updated as we go. New patterns get added when we discover them; matrix cells get
 | F4 | Signal envelope (OTel-aligned) | ✅ baked | `signal.ts` — id, ts, schema_version, source, machine, sentinel_id, kind, name, severity, attributes, payload |
 | F5 | Internal pub/sub (SignalBus) | ✅ baked | `bus.ts` — emit / emitAndWait / on, isolated error handling |
 | F6 | Hierarchical config + reload | ✅ baked | `config.ts` — defaults → file → env, Zod-validated, SIGHUP reload, onChange |
+| F7 | Capability registry | ❓ open | Core primitive. Recipes register their name, zone, description, and operations on wire-up. Zero new deps. The registry is the single source of truth that all three Access bindings read to serve their help surface: `mcp-binding` → `sentinel_help` tool; `api-binding` → `GET /help` (full) + capabilities summary in `GET /health`; `cli-binding` → `--help` flag. `toHelpDoc()` returns markdown; `toJSON()` returns structured JSON shaped to mirror MCP's `list_tools` schema so AI agents can build skills from it without reading source. Blocked on: design + core session. Not blocking any current pilot. See interface sketch in gap #11. |
 
 ### Collect (zone 1 — §7.1)
 
@@ -129,8 +130,8 @@ Per Anthropic's API/CLI/MCP framework. Mature Sentinels ship all three bindings.
 | X2 | Machine-role branching | 🛠️ recipe | `machine-role` — recorder / editor / orchestrator capability switch |
 | X3 | Sentinel-mesh discovery | 🔮 future | `sentinel-mesh` — Sentinels discover and read from each other |
 | X4 | Security: localhost-bind only (Tier 0) | ❓ open | Default for solo machines. No auth needed. |
-| X5 | Security: bearer token (Tier 1) | ❓ open | Multi-machine reach over Tailscale / LAN. Belt-and-braces with Tailscale ACLs. |
-| X6 | Security: public OAuth (Tier 2) | ❓ open | Cloudflare Tunnel + Access, or Tailscale Funnel + OAuth proxy. Rare. |
+| X5 | Security: bearer token (Tier 1) | 🛠️ recipe | Multi-machine reach over Tailscale / LAN. Belt-and-braces with Tailscale ACLs. Validated by SS Sentinel pilot: bearer token in `Authorization: Bearer <token>` header, token stored in `.env`, read at HTTP binding startup. Works for Claude Code MCP connections; does NOT work for claude.ai CoWork connectors (those require OAuth — see X6). |
+| X6 | Security: public OAuth (Tier 2) | 🛠️ recipe | Required when exposing a Sentinel to claude.ai CoWork. Validated by SS Sentinel pilot: a **self-contained OAuth server** (no external provider) embedded in the HTTP binding — three endpoints: `/.well-known/oauth-authorization-server` (discovery, required by claude.ai), `/authorize` (shows approval page, redirects with code), `/token` (exchanges code for access token). Client ID + secret are configured in `.env` and shared with each CoWork user. **Known gap**: in-memory token store is lost on process restart — deployed Sentinels (launchd/systemd) must persist tokens to a file or use long-lived JWTs, otherwise users must re-authenticate after every restart. See `docs/tunneling-guide.md` for Tailscale Funnel setup (required for a public HTTPS URL). |
 | X7 | Tailscale ACLs | ⛔ out of scope | Provided by Tailscale itself; AppySentinel relies on it implicitly when host is on a tailnet. Captured for awareness only. |
 
 ---
@@ -178,6 +179,7 @@ Pattern × app. `✓` = uses today; `🚧` = planned; `—` = does not / will no
 
 | Pattern | AR (legacy) | AR Sentinel (pilot 1) 🟢 | SS Sentinel (pilot 2) | AngelEye (legacy) |
 |---|:---:|:---:|:---:|:---:|
+| **F7** Capability registry | — | — | — | — |
 | **F1** Always-on loop | — (one-shot) | ✓ | 🚧 | ✓ |
 | **F2** Headless / no UI | — (conflated) | ✓ | 🚧 | — (conflated) |
 | **F3** Sentinel/Viewer split | — | ✓ | 🚧 | — |
@@ -208,7 +210,8 @@ Pattern × app. `✓` = uses today; `🚧` = planned; `—` = does not / will no
 | **O1** launchd | — | 🚧 (next) | ? | ? |
 | **X1** Config-pull | — | ? | — | — |
 | **X4** Localhost-bind security | — | 🚧 | 🚧 | ? |
-| **X5** Bearer-token security | — | ? | ? | — |
+| **X5** Bearer-token security | — | ? | ✓ | — |
+| **X6** Public OAuth (CoWork) | — | — | ✓ | — |
 
 ---
 
@@ -222,13 +225,68 @@ Synthesised from pattern × app — patterns the pilots need that AppySentinel d
 4. **`mcp-binding` recipe** — Pattern locked by PoC (2026-04-27). Read-only over snapshot-store. Data-age field first-class. Full spec at `appyradar-sentinal-safe/docs/mcp-surface.md`.
 5. **`api-binding` recipe** — AppyRadar Sentinel needs this so the AppyRadar Viewer (Baku app, hotel-live.html, Mochaccino panels) can consume snapshots.
 6. **Sentinel/Viewer split guidance (F3)** — Not a recipe but an install-agent rule. Both legacy apps violate it; both pilots must enforce it. Capture as a §1 architectural commitment + install-agent prompt.
-7. **Security tier model (X4–X6)** — All three cells are 🚧 or ❓ across both pilots. Needs a spec §7.8 once we riff on it. Tailscale-default + bearer-token covers most of David's footprint.
+7. **Security tier model (X4–X6)** — X5 and X6 are now pilot-validated by SS Sentinel (2026-04-29). X5 (bearer token) confirmed for Claude Code; X6 (self-contained OAuth) confirmed for claude.ai CoWork. X4 (localhost-only) still ❓ — no pilot has shipped in pure solo-machine mode yet. Remaining work: extract X5/X6 as named recipes; add OAuth token persistence (file-backed or JWT) to the X6 recipe before it can be used with launchd/systemd deployments. See `docs/tunneling-guide.md`.
 
 8. **Multi-machine fleet deployment** — No tooling for installing, configuring, or upgrading Sentinels across a fleet. The intended architecture is one Sentinel per machine, each self-reporting local state. AppyRadar's SSH-orchestration is a workaround for this gap, not the target design. Long-term fix: fleet install tooling (Ansible, or a future `configure-sentinel` fleet command). See spec §1 and §11.
+   - **Topology is a deferred per-deployment choice, not a one-time framework decision** (resolved 2026-06-13, AppyRadar interview). Shape B (`orchestrator-ssh`, one box reaching into N) and Shape A (per-machine self-observation, relaying via D6) are both first-class; pick per deployment and migrate only when a concrete trigger appears. **Don't build per-machine install / D6 speculatively** — the SSH-from-one workaround is correct until one of these bites: **(a) offline blindness** — a node that's down yields no current data; a local sentinel keeps observing and retains local history to relay on reconnect; **(b) permission/security friction** — reaching *into* a remote host hits escalated-permission walls and is itself a risk surface, whereas self-observation + "push for data, pull for config" needs no inbound connection; **(c) agent-locality** — an agent on a host wants only *that* host's state, with no central round-trip. These triggers are the build-signal for gap #8 and D6 alike. (Motivating pilot: AppyRadar; the triggers are framework-general.)
 
 9. **MCP registration at user scope** — The `claude mcp add` command defaults to project scope, meaning the MCP server only appears when Claude Code is opened inside that specific project folder. Sentinels are fleet/machine tools, not project tools — they should be registered at user scope so they are available in any Claude Code session regardless of working directory. The scaffold documentation and any generated README instructions must specify `--scope user` explicitly. See Scaffold Recommendations §S1 below.
 
 10. **install-service scripts missing from scaffold** — `install-service.sh`, `uninstall-service.sh`, and the launchd plist template currently exist only in `appyradar-sentinal`. Every Sentinel needs them. They should be a scaffold output from `create-appysentinel` so new projects get them automatically. See Scaffold Recommendations §S2 below.
+
+11. **`CapabilityRegistry` core primitive + help surface (F7)** — Every Sentinel should self-describe its wiring so developers and AI agents can discover capabilities without reading source code. Core gets a zero-dep `CapabilityRegistry`; recipes register on wire-up; each binding recipe exposes the registry in its format. Interface sketch:
+
+```typescript
+// packages/core/src/capability-registry.ts
+
+type CapabilityZone = 'collect' | 'access' | 'deliver' | 'internal';
+type OperationKind = 'query' | 'command' | 'tool' | 'event';
+
+interface OperationSchema {
+  name: string;
+  kind: OperationKind;
+  description: string;
+  params?: Record<string, { type: string; description: string; required?: boolean }>;
+  returns?: { type: string; description: string };
+  example?: string;
+}
+
+interface RecipeCapability {
+  name: string;         // e.g. 'owna-poller'
+  zone: CapabilityZone;
+  description: string;
+  version?: string;
+  operations?: OperationSchema[];
+}
+
+interface CapabilityRegistry {
+  register(capability: RecipeCapability): void;
+  list(): RecipeCapability[];
+  get(name: string): RecipeCapability | undefined;
+  toHelpDoc(): string;   // markdown — for cli-binding --help
+  toJSON(): object;      // structured — for api-binding GET /help and mcp-binding sentinel_help tool
+}
+```
+
+Usage pattern in a recipe:
+```typescript
+function ownaPoller(sentinel: Sentinel, opts: OwnaPollerOptions) {
+  sentinel.capabilities.register({
+    name: 'owna-poller',
+    zone: 'collect',
+    description: 'Polls OWNA API on a configurable interval and emits child/staff/attendance signals',
+    operations: [
+      { name: 'trigger-sync', kind: 'command', description: 'Trigger an immediate OWNA poll outside the normal schedule' },
+      { name: 'last-sync', kind: 'query', description: 'Returns timestamp and stats of the most recent OWNA poll' }
+    ]
+  });
+  // ... rest of recipe wiring
+}
+```
+
+`/health` returns `{ status, uptime, capabilities: 3 }` (count only). `GET /help` returns full registry JSON. `sentinel_help` MCP tool returns the same JSON. Not blocking any current pilot — tackle alongside health-probe / dataDir / PID file in the dedicated core session.
+
+12. **Data-as-first-class: a durable, schema'd data-provider model** — Today AppySentinel treats stored data as a byproduct of collection: payload schemas are documented per-recipe, not centrally enforced (see spec §7.2 / CONTEXT scope limit "no schema registry"), and there is no durability/backup story beyond `atomicWrite` + file storage. The forward direction (motivated by AppyRadar, framework-general) is to make **data itself a first-class, plugged-in concept**: a provider model where any fleet-meaningful shape is *owned* by the Sentinel under a declared schema, with backup/durability guarantees, **regardless of how it arrives** — *configured* (authored, rarely changing), *cron-scanned* (periodic collection), or *event-updated* (live). This unifies the schema-registry gap with a durability layer, and lets agents query authored/curated shapes (machine config, team/role composition) the same way they query scraped telemetry — replacing hand-maintained `.md`/memory facts with a live, durable, schema-checked source of truth. Sub-parts: (i) a schema registry (resolves the payload-versioning open item, spec §15); (ii) durability/backup for stored data (snapshot history, restore); (iii) a `data-provider` recipe family spanning the three ingestion modes. No current pilot blocks on this — it's the framework's data-plane roadmap, not a v1 requirement. The smallest first step that would prove it: a single configured (authored) schema served through the Access zone alongside the scraped snapshot.
 
 What's deferred (no current pilot validates):
 
@@ -288,10 +346,33 @@ Note: the path must be absolute. Relative paths break when Claude Code is opened
 
 ---
 
+### S3 — MCP tool pairing rule (list + get for every entity)
+
+**Problem.** A `get_<entity>(id)` tool is a dead-end unless the caller already has a UUID. When only `get_company(uuid)` exists but `list_companies()` does not, an AI agent cannot enumerate entities — it can only fetch ones it already knows about. This makes the MCP surface useless for discovery tasks.
+
+Validated by SS Sentinel pilot: `get_company` existed without `list_companies`, so claude.ai CoWork could not surface companies that had no incidents. The only companies visible were those that appeared in other tools' results.
+
+**Rule.** Every MCP-exposed entity must ship a `list_<entity>()` tool alongside its `get_<entity>(id)` tool:
+
+- `list_<entity>()` — returns a summary array (ID + key fields). Accepts optional filter params. Paginates if the entity set can be large.
+- `get_<entity>(id)` — returns full detail for one record by ID.
+
+Neither tool is optional. A `get_*` without a `list_*` is an incomplete surface.
+
+**What needs to change in the scaffold.**
+
+- The `mcp-binding` recipe template should include a commented example of both tools for a sample entity.
+- The `configure-sentinel` agent prompt should ask "for each entity you're exposing, does it have both a list and a get tool?" as a checklist item before generating the binding.
+
+---
+
 ## Change log
 
 | Date | Change |
 |------|--------|
+| 2026-06-13 | Added gap #12 (data-as-first-class: durable, schema'd data-provider model) — unifies the no-schema-registry limit with a durability/backup layer + `data-provider` recipe family across configured/cron/event ingestion. Annotated gap #8 + D6 with the topology-as-deferred-choice resolution and the a/b/c migration triggers (offline blindness / permission friction / agent-locality). Source: AppyRadar interview; framework-general distillation. Companion edits in `design-synthesis.md` §6 Q1+Q3 (resolved) and `CONTEXT.md` §4/§7. |
+| 2026-05-04 | Added F7 Capability registry pattern. Added gap #11 with full `CapabilityRegistry` interface sketch. F7 added to capability matrix (all —, not yet piloted). |
+| 2026-04-29 | X5/X6 promoted from ❓ open to 🛠️ recipe — both validated by SS Sentinel pilot. X5 (bearer token) confirmed for Claude Code MCP. X6 (self-contained OAuth with `/.well-known/` discovery) confirmed for claude.ai CoWork. OAuth token persistence gap noted under X6. Capability matrix updated: X5 ✓ and X6 ✓ for SS Sentinel. Gap #7 updated. Added S3 (MCP list+get pairing rule). Added `docs/tunneling-guide.md`. |
 | 2026-04-28 | Added Scaffold Recommendations section (S1: MCP user-scope registration; S2: install-service scripts in scaffold template). Gap items 9 and 10 added to gap summary referencing S1/S2. |
 | 2026-04-28 | A5 Command layer: added file-based signal pattern (state/ directory, stateless commands, loop as single stateful actor). References spec §7.3 additions. |
 | 2026-04-28 | Vocabulary sweep: all residual "expose surface" → "Access zone"; E1/E2 → A1/A2 in capability graduation section. A5 Command layer notes enriched with concrete examples. Gap #8 (multi-machine fleet deployment) added. Single-host framing corrected in spec §1 (one-per-machine is the intended design; AppyRadar SSH is a workaround). |
