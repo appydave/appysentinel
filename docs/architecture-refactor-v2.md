@@ -1,7 +1,7 @@
 # Architecture Refactor — v0.2.0
 
-**Status**: Planned. Not yet implemented.
-**Date**: 2026-04-28
+**Status**: Complete. All three projects shipped.
+**Date**: 2026-04-28 (planned) — 2026-04-29 (completed)
 **Context**: Conversation session — AppySentinel architecture + vocabulary alignment.
 
 This document is the handover for three projects that must happen in order.
