@@ -1,6 +1,5 @@
 {
   "lockfileVersion": 1,
-  "configVersion": 1,
   "workspaces": {
     "": {
       "name": "appysentinel",
@@ -10,7 +9,7 @@
     },
     "packages/cli": {
       "name": "create-appysentinel",
-      "version": "0.1.6",
+      "version": "0.2.1",
       "bin": {
         "create-appysentinel": "dist/index.js",
       },
@@ -42,11 +41,10 @@
     },
     "packages/core": {
       "name": "@appydave/appysentinel-core",
-      "version": "0.1.0",
+      "version": "0.3.0",
       "dependencies": {
-        "pino": "^9.5.0",
+        "@appydave/core": "^0.1.0",
         "ulid": "^2.3.0",
-        "zod": "^3.23.0",
       },
       "devDependencies": {
         "@types/node": "^22.10.0",
@@ -63,7 +61,9 @@
       "devDependencies": {
         "@appydave/appysentinel-config": "workspace:*",
         "@types/node": "^22.10.0",
+        "husky": "^9.0.0",
         "typescript": "^5.7.0",
+        "vitest": "^2.0.0",
       },
     },
   },
@@ -71,6 +71,8 @@
     "@appydave/appysentinel-config": ["@appydave/appysentinel-config@workspace:packages/config"],
 
     "@appydave/appysentinel-core": ["@appydave/appysentinel-core@workspace:packages/core"],
+
+    "@appydave/core": ["@appydave/core@0.1.0", "", { "dependencies": { "pino": "^9.5.0", "zod": "^3.23.0" } }, "sha512-6EYx+qt+Ma7lasptrYqCKAFu41M3ob5p8KEOufkW8kmfbFdAcPMIWr5xaDxR/1gbTO9Wye8AfxFOnphsvn+p2w=="],
 
     "@clack/core": ["@clack/core@0.3.5", "", { "dependencies": { "picocolors": "^1.0.0", "sisteransi": "^1.0.5" } }, "sha512-5cfhQNH+1VQ2xLQlmzXMqUoiaH0lRBq9/CLW9lTyMbuKLC3+xEK01tHVvyut++mLOn5urSHmkm6I0Lg9MaJSTQ=="],
 

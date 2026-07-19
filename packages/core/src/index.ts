@@ -24,6 +24,9 @@ export {
   createSignalBus,
 } from './bus.js';
 
+// Shared foundation primitives now live in @appydave/core (extracted by copy,
+// then de-duplicated). Re-exported here so the appysentinel-core public API is
+// unchanged — consumers keep importing them from '@appydave/appysentinel-core'.
 export {
   type Lifecycle,
   type LifecycleStatus,
@@ -34,20 +37,18 @@ export {
   type ReloadHook,
   type CreateLifecycleOptions,
   createLifecycle,
-} from './lifecycle.js';
-
-export {
   type ConfigLoader,
   type ConfigLoaderOptions,
   createConfigLoader,
   z,
-} from './config.js';
-
-export { atomicWrite, type AtomicWriteOptions } from './atomic-write.js';
-
-export { SerialQueue } from './serial-queue.js';
-
-export { createLogger, type Logger, type LogLevel, type CreateLoggerOptions } from './logger.js';
+  atomicWrite,
+  type AtomicWriteOptions,
+  SerialQueue,
+  createLogger,
+  type Logger,
+  type LogLevel,
+  type CreateLoggerOptions,
+} from '@appydave/core';
 
 export {
   type Sentinel,
