@@ -1,0 +1,30 @@
+{
+  "workspace": "client",
+  "synthesis_source": "documentation",
+  "audience": "clients and AI-aware stakeholders",
+  "updated": "2026-04-28",
+  "designs": [
+    {
+      "id": "01-what-appysentinel-does",
+      "title": "What AppySentinel Does",
+      "slug": "what-appysentinel-does",
+      "workspace": "client",
+      "shape": "intro",
+      "status": "active",
+      "data": "client/data/01-what-appysentinel-does.json",
+      "view": "client/designs/01-what-appysentinel-does/index.html",
+      "description": "What it is, what problem it solves, the three zones in plain language, and a case study."
+    },
+    {
+      "id": "02-capabilities-and-fit",
+      "title": "Capabilities & Fit",
+      "slug": "capabilities-and-fit",
+      "workspace": "client",
+      "shape": "card-grid",
+      "status": "active",
+      "data": "client/data/02-capabilities-and-fit.json",
+      "view": "client/designs/02-capabilities-and-fit/index.html",
+      "description": "Three zones from a buyer perspective — available/planned capability cards and a good-fit/not-fit guide."
+    }
+  ]
+}

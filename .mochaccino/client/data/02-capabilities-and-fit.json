@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "id": "client-capabilities",
+    "version": "1.0.0",
+    "extracted": "2026-04-28",
+    "last_updated": "2026-04-28",
+    "source": ".mochaccino/documentation/data/03-pattern-capability-matrix.json + 04-recipe-catalog.json"
+  },
+  "title": "Capabilities & Fit",
+  "subtitle": "What a Sentinel can watch, expose, and deliver — and whether it fits your use case.",
+  "intro": "AppySentinel is a boilerplate — the capabilities below are the building blocks. Each project uses the ones it needs. Some are proven in live pilots; others are designed and ready to build.",
+  "status_legend": [
+    { "code": "available", "label": "Available now", "detail": "Proven in a real project or ready to deploy" },
+    { "code": "planned",   "label": "Planned",       "detail": "Specified and designed — built on demand for your project" }
+  ],
+  "zones": [
+    {
+      "name": "Collect",
+      "question": "What sources can a Sentinel watch?",
+      "intro": "The Sentinel reaches out and gathers data on a schedule — or listens for data arriving. Inbound only.",
+      "capabilities": [
+        {
+          "name": "Remote server fleet",
+          "detail": "Poll any number of remote machines via SSH. Nothing installed on the remote servers — the Sentinel sends commands and reads results out.",
+          "status": "available",
+          "pilot": "AppyRadar"
+        },
+        {
+          "name": "Database by watermark",
+          "detail": "Poll a database for records that changed since the last check. Keeps a local mirror in sync without full table scans.",
+          "status": "planned",
+          "pilot": "SS Data Query"
+        },
+        {
+          "name": "HTTP / API endpoints",
+          "detail": "Poll any HTTP endpoint on a configurable interval. Works with any REST API.",
+          "status": "planned",
+          "pilot": null
+        },
+        {
+          "name": "File system events",
+          "detail": "Watch a directory for files being created, changed, or deleted. Triggers on change — no polling interval required.",
+          "status": "planned",
+          "pilot": null
+        },
+        {
+          "name": "Incoming webhooks",
+          "detail": "Receive POST events from external systems. The Sentinel listens; external systems push.",
+          "status": "planned",
+          "pilot": null
+        },
+        {
+          "name": "Local shell commands",
+          "detail": "Run any local command on a schedule and capture its output as data.",
+          "status": "planned",
+          "pilot": null
+        }
+      ]
+    },
+    {
+      "name": "Access",
+      "question": "How does your code or AI agent talk to it?",
+      "intro": "The Sentinel exposes collected data through one or more surfaces. You choose which ones your project needs.",
+      "capabilities": [
+        {
+          "name": "MCP server — AI agents",
+          "detail": "Exposes data as MCP tools that Claude and other AI agents can call natively. The primary surface for AI-forward workflows — your agents get structured data without any custom plumbing.",
+          "status": "planned",
+          "pilot": "SS Data Query"
+        },
+        {
+          "name": "REST API — dashboards and scripts",
+          "detail": "A simple HTTP interface any dashboard, browser, or script can query. Endpoints for health, latest signals, and snapshots.",
+          "status": "planned",
+          "pilot": "AppyRadar"
+        },
+        {
+          "name": "CLI — terminal and automation",
+          "detail": "Query the Sentinel from a terminal. Pipe-friendly — compose with jq, grep, or any shell tool.",
+          "status": "planned",
+          "pilot": null
+        }
+      ]
+    },
+    {
+      "name": "Deliver",
+      "question": "Where can it push data outward?",
+      "intro": "Optionally push collected data to other systems on a schedule — without being asked.",
+      "capabilities": [
+        {
+          "name": "HTTP endpoint",
+          "detail": "Batch-push data to any remote endpoint with retry and backoff.",
+          "status": "planned",
+          "pilot": null
+        },
+        {
+          "name": "Supabase",
+          "detail": "Push data directly into a Supabase table — useful for cloud-accessible storage or sharing across projects.",
+          "status": "planned",
+          "pilot": null
+        },
+        {
+          "name": "File sync",
+          "detail": "Relay collected data to another machine on the same network via rsync or Syncthing.",
+          "status": "planned",
+          "pilot": null
+        }
+      ]
+    }
+  ],
+  "fit_guide": {
+    "heading": "Is AppySentinel a fit?",
+    "good": [
+      "You want AI agents to query your data without hitting production systems",
+      "You need a single view across a fleet of machines",
+      "You want a data mirror that stays fresh automatically",
+      "You're building a dashboard that needs live data from multiple sources",
+      "You want AI-native data access (MCP) without building a custom server"
+    ],
+    "not": [
+      "You need a cloud-hosted, fully managed solution",
+      "You need to write back to the systems you're watching — it is read-only by design",
+      "You need sub-second real-time streaming",
+      "You're looking for a point-and-click, no-code setup"
+    ]
+  }
+}

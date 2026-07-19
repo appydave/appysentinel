@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AppySentinel — What it does</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@200..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Roboto+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand-brown:        #342d2d;
+      --brand-gold:         #ccba9d;
+      --brand-yellow:       #ffde59;
+      --brand-amber:        #c8841a;
+      --brand-muted:        #7a6e5e;
+      --brand-near-white:   #faf5ec;
+      --brand-surface:      #f0ebe4;
+      --brand-linen:        #e8e0d4;
+      --brand-border:       #d4cdc4;
+      --brand-chrome:       #1a1515;
+      --brand-dark-surface: #25201e;
+      --brand-blue:         #2E91FC;
+
+      --collect-color: #1a6eb5;
+      --collect-bg:    #eaf2fc;
+      --access-color:  #2a7a5a;
+      --access-bg:     #e6f5ee;
+      --deliver-color: #b5640f;
+      --deliver-bg:    #fdf0dc;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--brand-near-white);
+      color: var(--brand-brown);
+      line-height: 1.65;
+    }
+
+    /* ── Banner ── */
+    .mocha-banner {
+      background: var(--brand-chrome);
+      color: var(--brand-gold);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 11px;
+      padding: 7px 32px;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ── Hero ── */
+    .hero-outer {
+      background: var(--brand-dark-surface);
+      border-bottom: 3px solid var(--brand-yellow);
+    }
+
+    .hero {
+      padding: 72px 0 60px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: end;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Oswald', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--brand-gold);
+      margin-bottom: 18px;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(56px, 9vw, 100px);
+      line-height: 0.9;
+      color: #fff;
+      letter-spacing: 0.03em;
+      margin-bottom: 16px;
+    }
+
+    .hero-title span {
+      color: var(--brand-yellow);
+    }
+
+    .hero-tagline {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 300;
+      font-size: clamp(18px, 2.8vw, 26px);
+      color: var(--brand-gold);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── What it is block ── */
+    .what-it-is {
+      padding: 48px 0 44px;
+      border-bottom: 1px solid var(--brand-linen);
+      display: grid;
+      grid-template-columns: 4px 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .what-rule { background: var(--brand-yellow); }
+
+    .what-content h2 {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      font-size: clamp(18px, 2.2vw, 24px);
+      text-transform: uppercase;
+      color: var(--brand-brown);
+      margin-bottom: 12px;
+      letter-spacing: 0.01em;
+    }
+
+    .what-body {
+      font-size: clamp(15px, 1.8vw, 17px);
+      color: var(--brand-brown);
+      line-height: 1.8;
+      font-weight: 300;
+      max-width: 700px;
+    }
+
+    .hero-badge {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--brand-gold);
+      border: 1px solid rgba(204,186,157,0.35);
+      padding: 10px 16px;
+      align-self: start;
+      white-space: nowrap;
+    }
+
+    /* ── Sections ── */
+    .section {
+      padding: 56px 0;
+      border-bottom: 1px solid var(--brand-linen);
+    }
+
+    .section-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--brand-muted);
+      margin-bottom: 28px;
+    }
+
+    /* ── Problem ── */
+    .problem-block {
+      display: grid;
+      grid-template-columns: 4px 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .problem-rule { background: var(--brand-amber); }
+
+    .problem-content h2 {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      font-size: clamp(20px, 2.5vw, 28px);
+      text-transform: uppercase;
+      color: var(--brand-brown);
+      margin-bottom: 14px;
+      letter-spacing: 0.01em;
+    }
+
+    .problem-body {
+      font-size: 15.5px;
+      color: var(--brand-brown);
+      line-height: 1.8;
+      font-weight: 300;
+      max-width: 700px;
+    }
+
+    /* ── Analogy ── */
+    .analogy-card {
+      background: var(--brand-dark-surface);
+      padding: 40px 44px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .analogy-card::before {
+      content: '"';
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 240px;
+      color: rgba(204,186,157,0.06);
+      position: absolute;
+      top: -20px;
+      left: 20px;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .analogy-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--brand-gold);
+      margin-bottom: 16px;
+    }
+
+    .analogy-text {
+      font-size: clamp(16px, 2.2vw, 20px);
+      color: #f0ebe4;
+      line-height: 1.75;
+      font-weight: 300;
+      max-width: 680px;
+      position: relative;
+    }
+
+    /* ── Properties grid ── */
+    .props-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--brand-linen);
+    }
+
+    .prop-card {
+      background: var(--brand-near-white);
+      padding: 28px 30px 32px;
+      position: relative;
+    }
+
+    .prop-card:nth-child(1)::before,
+    .prop-card:nth-child(2)::before,
+    .prop-card:nth-child(3)::before,
+    .prop-card:nth-child(4)::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .prop-card:nth-child(1)::before { background: var(--brand-yellow); }
+    .prop-card:nth-child(2)::before { background: var(--brand-amber); }
+    .prop-card:nth-child(3)::before { background: var(--brand-gold); }
+    .prop-card:nth-child(4)::before { background: var(--brand-muted); }
+
+    .prop-icon {
+      font-size: 22px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .prop-name {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      font-size: 20px;
+      text-transform: uppercase;
+      color: var(--brand-brown);
+      margin-bottom: 10px;
+      letter-spacing: 0.01em;
+    }
+
+    .prop-detail {
+      font-size: 14px;
+      color: var(--brand-muted);
+      line-height: 1.65;
+    }
+
+    /* ── What you get ── */
+    .get-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .get-card {
+      background: var(--brand-surface);
+      padding: 24px 26px;
+      border-top: 3px solid var(--brand-linen);
+    }
+
+    .get-card:nth-child(1) { border-top-color: var(--brand-yellow); }
+    .get-card:nth-child(2) { border-top-color: var(--brand-amber); }
+    .get-card:nth-child(3) { border-top-color: var(--access-color); }
+    .get-card:nth-child(4) { border-top-color: var(--collect-color); }
+
+    .get-item {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      font-size: 17px;
+      text-transform: uppercase;
+      color: var(--brand-brown);
+      margin-bottom: 8px;
+    }
+
+    .get-detail {
+      font-size: 13.5px;
+      color: var(--brand-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Zones ── */
+    .zones-layout {
+      display: grid;
+      grid-template-columns: 1fr 4px 1fr 4px 1fr;
+      gap: 0;
+      align-items: stretch;
+    }
+
+    .zone-card {
+      padding: 28px 26px;
+    }
+
+    .zone-card.collect { background: var(--collect-bg); }
+    .zone-card.access  { background: var(--access-bg); }
+    .zone-card.deliver { background: var(--deliver-bg); }
+
+    .zone-divider {
+      background: var(--brand-linen);
+    }
+
+    .zone-direction {
+      font-family: 'Oswald', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .collect .zone-direction { color: var(--collect-color); }
+    .access  .zone-direction { color: var(--access-color); }
+    .deliver .zone-direction { color: var(--deliver-color); }
+
+    .zone-name {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .collect .zone-name { color: var(--collect-color); }
+    .access  .zone-name { color: var(--access-color); }
+    .deliver .zone-name { color: var(--deliver-color); }
+
+    .zone-plain {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 300;
+      font-size: 14px;
+      color: var(--brand-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .zone-detail {
+      font-size: 13px;
+      color: var(--brand-brown);
+      line-height: 1.65;
+    }
+
+    /* ── Case studies ── */
+    .cases-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--brand-linen);
+    }
+
+    .case-card {
+      background: var(--brand-near-white);
+      padding: 32px 28px;
+    }
+
+    .case-context {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brand-amber);
+      margin-bottom: 10px;
+    }
+
+    .case-name {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      text-transform: uppercase;
+      color: var(--brand-brown);
+      margin-bottom: 20px;
+      letter-spacing: 0.01em;
+    }
+
+    .case-row {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+      align-items: start;
+    }
+
+    .case-row-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--brand-muted);
+      padding-top: 2px;
+    }
+
+    .case-row-text {
+      font-size: 13.5px;
+      color: var(--brand-brown);
+      line-height: 1.6;
+    }
+
+    .case-outcome {
+      margin-top: 16px;
+      padding: 12px 14px;
+      background: var(--brand-dark-surface);
+      color: var(--brand-gold);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* ── What it is not ── */
+    .not-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .not-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      background: var(--brand-surface);
+    }
+
+    .not-x {
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--brand-border);
+      flex-shrink: 0;
+      line-height: 1.3;
+    }
+
+    .not-label {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      color: var(--brand-brown);
+      margin-bottom: 4px;
+    }
+
+    .not-detail {
+      font-size: 12.5px;
+      color: var(--brand-muted);
+      line-height: 1.5;
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      padding: 32px 0 44px;
+    }
+
+    .footer-note {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 10.5px;
+      color: var(--brand-border);
+      text-align: center;
+      letter-spacing: 0.08em;
+    }
+
+    .footer-link {
+      color: var(--brand-muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--brand-border);
+      padding-bottom: 1px;
+    }
+    .footer-link:hover { color: var(--brand-brown); }
+
+    .loading {
+      text-align: center;
+      padding: 120px 40px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 13px;
+      color: var(--brand-muted);
+    }
+
+    @media (max-width: 700px) {
+      .container { padding: 0 20px; }
+      .hero { grid-template-columns: 1fr; }
+      .props-grid, .get-grid, .cases-grid, .not-grid { grid-template-columns: 1fr; }
+      .zones-layout { grid-template-columns: 1fr; }
+      .zone-divider { height: 1px; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Mochaccino citation — data: client/data/01-what-appysentinel-does.json — source: documentation/data/01-what-is-appysentinel.json + conversation synthesis — rendered: 2026-04-28 -->
+<div class="mocha-banner">Mocha — What AppySentinel Does — 2026-04-28</div>
+<div id="app"><div class="loading">Loading…</div></div>
+
+<script>
+fetch('../../data/01-what-appysentinel-does.json')
+  .then(r => r.json())
+  .then(render)
+  .catch(e => {
+    document.getElementById('app').innerHTML =
+      `<div class="loading">Could not load data: ${e.message}</div>`;
+  });
+
+function render(d) {
+
+  const propCards = d.properties.map(p => `
+    <div class="prop-card">
+      <span class="prop-icon">${p.icon}</span>
+      <div class="prop-name">${p.name}</div>
+      <div class="prop-detail">${p.detail}</div>
+    </div>
+  `).join('');
+
+  const getCards = d.what_you_get.map(w => `
+    <div class="get-card">
+      <div class="get-item">${w.item}</div>
+      <div class="get-detail">${w.detail}</div>
+    </div>
+  `).join('');
+
+  const zoneColour = { Collect: 'collect', Access: 'access', Deliver: 'deliver' };
+  const dirSymbol  = { inbound: '← ', bidirectional: '↕ ', outbound: '' };
+  const dirSuffix  = { inbound: '', bidirectional: '', outbound: ' →' };
+
+  const zoneCards = d.zones.map((z, i) => {
+    const cls = zoneColour[z.name] || '';
+    const prefix = dirSymbol[z.direction] || '';
+    const suffix = dirSuffix[z.direction] || '';
+    const divider = i < d.zones.length - 1 ? '<div class="zone-divider"></div>' : '';
+    return `
+      <div class="zone-card ${cls}">
+        <div class="zone-direction">${prefix}${z.direction}${suffix}</div>
+        <div class="zone-name">${z.name}</div>
+        <div class="zone-plain">${z.plain}</div>
+        <div class="zone-detail">${z.detail}</div>
+      </div>
+      ${divider}
+    `;
+  }).join('');
+
+  const caseCards = d.case_studies.map(c => `
+    <div class="case-card">
+      <div class="case-context">${c.context}</div>
+      <div class="case-name">${c.name}</div>
+      <div class="case-row">
+        <div class="case-row-label">Need</div>
+        <div class="case-row-text">${c.problem}</div>
+      </div>
+      <div class="case-row">
+        <div class="case-row-label">How</div>
+        <div class="case-row-text">${c.solution}</div>
+      </div>
+      <div class="case-outcome">${c.outcome}</div>
+    </div>
+  `).join('');
+
+  const notItems = d.what_it_is_not.map(n => `
+    <div class="not-item">
+      <div class="not-x">✕</div>
+      <div>
+        <div class="not-label">${n.label}</div>
+        <div class="not-detail">${n.detail}</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('app').innerHTML = `
+    <div class="hero-outer">
+      <div class="container">
+        <header class="hero">
+          <div>
+            <div class="hero-eyebrow">AppySentinel · Overview</div>
+            <div class="hero-title">Appy<span>Sentinel</span></div>
+            <div class="hero-tagline">${d.tagline}</div>
+          </div>
+          <div class="hero-badge">v1 · 2026</div>
+        </header>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="what-it-is">
+        <div class="what-rule"></div>
+        <div class="what-content">
+          <h2>${d.what_it_is.heading}</h2>
+          <p class="what-body">${d.what_it_is.body}</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="problem-block">
+          <div class="problem-rule"></div>
+          <div class="problem-content">
+            <h2>${d.problem.heading}</h2>
+            <p class="problem-body">${d.problem.body}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="analogy-card">
+          <div class="analogy-label">${d.analogy.heading}</div>
+          <p class="analogy-text">${d.analogy.body}</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Four things that make it different</div>
+        <div class="props-grid">${propCards}</div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">What you get when it's running</div>
+        <div class="get-grid">${getCards}</div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">How it works — three roles</div>
+        <div class="zones-layout">${zoneCards}</div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Live examples — v1 pilots</div>
+        <div class="cases-grid">${caseCards}</div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">What it is not</div>
+        <div class="not-grid">${notItems}</div>
+      </div>
+
+      <div class="page-footer">
+        <div class="footer-note">
+          appysentinel · client workspace · 2026-04-28 &nbsp;·&nbsp;
+          <a class="footer-link" href="https://github.com/appydave/appysentinal" target="_blank">github.com/appydave/appysentinal</a>
+        </div>
+      </div>
+
+    </div>
+  `;
+}
+</script>
+</body>
+</html>

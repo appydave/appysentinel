@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "id": "client-overview",
+    "version": "1.1.0",
+    "extracted": "2026-04-28",
+    "last_updated": "2026-04-28",
+    "source": ".mochaccino/documentation/data/01-what-is-appysentinel.json + conversation synthesis",
+    "sync_check": ["01-what-is-appysentinel.json: definition, core_rules, v1_pilots"]
+  },
+  "title": "AppySentinel",
+  "tagline": "Build the thing that keeps your data always awake.",
+  "what_it_is": {
+    "heading": "What AppySentinel is",
+    "body": "AppySentinel is a boilerplate — a production-ready foundation for building always-on data coordinators. You describe what to watch and how to expose it. AppySentinel handles everything else: the lifecycle, the storage, the service registration, the signal format. What you end up with is called a Sentinel — a dedicated process that runs on one machine, 24/7, collecting and serving your data."
+  },
+  "problem": {
+    "heading": "The problem it solves",
+    "body": "Data lives in too many places — production databases, remote servers, third-party APIs, log files. When a dashboard or AI agent needs that data, it either hits the live source directly (risky, slow, expensive) or depends on manual exports that go stale. You end up with fragile pipelines, data you can't trust, or production systems you're afraid to touch."
+  },
+  "analogy": {
+    "heading": "A simpler way to think about it",
+    "body": "Think of AppySentinel as a staffing framework for data watchers. It handles all the hard infrastructure — the always-on service, the safe shutdown, the data envelope, the access surfaces. You configure what your Sentinel watches and what it exposes. The Sentinel it produces is the dedicated person: never sleeps, never misses a change, never touches the original."
+  },
+  "properties": [
+    {
+      "name": "Always on",
+      "icon": "⏻",
+      "detail": "A Sentinel registers as a system service — starts automatically at login, restarts if it crashes. No manual intervention once deployed."
+    },
+    {
+      "name": "Read-only",
+      "icon": "🔒",
+      "detail": "Sentinels watch and copy, never write back. Your production systems are safe by design."
+    },
+    {
+      "name": "Local-first",
+      "icon": "🔭",
+      "detail": "The intended pattern is one Sentinel per machine — each one knows its local environment deeply. A Sentinel can also reach out to databases, APIs, and remote systems, but local-first is the design."
+    },
+    {
+      "name": "No dashboard required",
+      "icon": "📡",
+      "detail": "A Sentinel keeps collecting whether or not anything is connected to it. Your AI agents can query it via MCP — ask it questions, get live data — without a dashboard ever being built. Add a visual dashboard when and if you need one."
+    }
+  ],
+  "what_you_get": [
+    {
+      "item": "A running Sentinel",
+      "detail": "A production-ready, always-on process on your machine — scaffolded in minutes, deployed as a system service."
+    },
+    {
+      "item": "Fresh local data",
+      "detail": "A continuously updated copy of the data you care about, stored locally and ready to query."
+    },
+    {
+      "item": "AI agent surface",
+      "detail": "An MCP server your AI agents (Claude, etc.) can call natively — without touching production."
+    },
+    {
+      "item": "REST API",
+      "detail": "A simple HTTP endpoint your dashboards, scripts, and tools can query at any time."
+    }
+  ],
+  "zones": [
+    {
+      "name": "Collect",
+      "plain": "Watches your sources",
+      "direction": "inbound",
+      "detail": "Connects to whatever you need to monitor — databases, remote servers, APIs, files, incoming events — on a schedule you define."
+    },
+    {
+      "name": "Access",
+      "plain": "Query and command",
+      "direction": "bidirectional",
+      "detail": "Two-way interface. Read side: ask what the Sentinel knows — latest data, snapshots, status — via MCP (AI agents), REST API (dashboards), or CLI (scripts). Write side: control the Sentinel itself. Add a new machine to the fleet. Trigger an immediate poll on a machine that normally runs hourly. Set or change a polling schedule. The Sentinel never touches the systems it watches — commands control the Sentinel, not what it observes."
+    },
+    {
+      "name": "Deliver",
+      "plain": "Pushes data outward",
+      "direction": "outbound",
+      "detail": "Optionally forwards data to other systems — a central server, a cloud database, an observability platform — on a schedule, without being asked."
+    }
+  ],
+  "case_studies": [
+    {
+      "name": "Fleet Monitor",
+      "context": "AppyRadar — Pilot 1",
+      "problem": "Needed real-time visibility across 5 machines for a fleet dashboard — without managing 5 separate Sentinel installs.",
+      "solution": "A single Sentinel uses SSH to poll all 5 machines from one place. A pragmatic shortcut: the long-term design would be one Sentinel per machine, each reporting its own local state.",
+      "outcome": "Fleet visibility running in days, not weeks. Trade-off acknowledged: the SSH approach gives breadth fast; per-machine Sentinels give deeper local data later."
+    },
+    {
+      "name": "Database Mirror",
+      "context": "SS Data Query — Pilot 2",
+      "problem": "AI agents needed to query a production database without hitting it directly.",
+      "solution": "A Sentinel polls the database on a watermark, keeps a local mirror up to date, and exposes it via MCP.",
+      "outcome": "AI agents query the local mirror natively — production untouched, always-fresh data available."
+    }
+  ],
+  "what_it_is_not": [
+    { "label": "Not a tool you run directly", "detail": "AppySentinel is the boilerplate. You scaffold a Sentinel from it — that's the thing that runs." },
+    { "label": "Not a cloud service", "detail": "The Sentinels you build run on your machine, not in the cloud." },
+    { "label": "Not a dashboard", "detail": "Visualisation is a separate app that reads from a Sentinel." },
+    { "label": "Not a managed service", "detail": "You own and deploy the Sentinels you build." }
+  ]
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AppySentinel — Client Views Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@200..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Roboto+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand-brown:        #342d2d;
+      --brand-gold:         #ccba9d;
+      --brand-yellow:       #ffde59;
+      --brand-amber:        #c8841a;
+      --brand-muted:        #7a6e5e;
+      --brand-near-white:   #faf5ec;
+      --brand-surface:      #f0ebe4;
+      --brand-linen:        #e8e0d4;
+      --brand-border:       #d4cdc4;
+      --brand-chrome:       #1a1515;
+      --brand-dark-surface: #25201e;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Roboto', sans-serif; background: var(--brand-near-white); color: var(--brand-brown); }
+    .mocha-banner { background: var(--brand-chrome); color: var(--brand-gold); font-family: 'Roboto Mono', monospace; font-size: 11px; padding: 7px 32px; letter-spacing: 0.1em; }
+    .container { max-width: 960px; margin: 0 auto; padding: 0 40px; }
+    .page-header { padding: 52px 0 40px; border-bottom: 2px solid var(--brand-linen); display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+    .eyebrow { font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--brand-amber); margin-bottom: 10px; }
+    h1 { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: clamp(28px, 4vw, 44px); text-transform: uppercase; color: var(--brand-brown); line-height: 1.0; }
+    .header-meta { text-align: right; font-family: 'Roboto Mono', monospace; font-size: 11px; color: var(--brand-muted); line-height: 1.8; }
+    .workspace-note { margin-top: 4px; padding: 6px 12px; background: var(--brand-surface); font-family: 'Roboto Mono', monospace; font-size: 10px; color: var(--brand-muted); letter-spacing: 0.06em; display: inline-block; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2px; padding: 40px 0 56px; }
+    .design-card { padding: 32px 28px; text-decoration: none; display: block; position: relative; transition: opacity 0.15s; }
+    .design-card:hover { opacity: 0.85; }
+    .design-card:nth-child(odd)  { background: var(--brand-surface); color: var(--brand-brown); }
+    .design-card:nth-child(even) { background: var(--brand-dark-surface); color: #f0ebe4; }
+    .card-number { font-family: 'Bebas Neue', sans-serif; font-size: 40px; line-height: 1; opacity: 0.18; margin-bottom: 16px; letter-spacing: 0.04em; }
+    .design-card:nth-child(even) .card-number { opacity: 0.25; color: var(--brand-gold); }
+    .card-audience { font-family: 'Roboto Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand-amber); margin-bottom: 8px; }
+    .design-card:nth-child(even) .card-audience { color: var(--brand-gold); }
+    .card-title { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; line-height: 1.1; margin-bottom: 12px; }
+    .card-desc { font-size: 13px; line-height: 1.6; opacity: 0.75; margin-bottom: 20px; }
+    .card-arrow { position: absolute; bottom: 28px; right: 24px; font-size: 18px; opacity: 0.3; }
+    .dev-link { display: inline-block; margin-top: 32px; font-family: 'Roboto Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--brand-muted); text-decoration: none; border-bottom: 1px solid var(--brand-border); padding-bottom: 1px; }
+    .dev-link:hover { color: var(--brand-brown); }
+    .page-footer { padding: 24px 0 40px; border-top: 1px solid var(--brand-linen); }
+    .footer-note { font-family: 'Roboto Mono', monospace; font-size: 10.5px; color: var(--brand-border); text-align: center; letter-spacing: 0.08em; }
+  </style>
+</head>
+<body>
+<div class="mocha-banner">Mocha — Client Views Gallery — 2026-04-28</div>
+<div class="container">
+  <header class="page-header">
+    <div>
+      <div class="eyebrow">AppySentinel · Client Workspace</div>
+      <h1>Client Views</h1>
+      <div class="workspace-note">audience: non-dev to AI-forward clients · parallel workspace</div>
+    </div>
+    <div class="header-meta">
+      2 views · active<br>
+      <a href="../../documentation/designs/" style="font-size:10px;color:var(--brand-muted);text-decoration:none;border-bottom:1px solid var(--brand-border)">→ developer docs</a>
+    </div>
+  </header>
+
+  <div class="gallery-grid">
+
+    <a class="design-card" href="01-what-appysentinel-does/">
+      <div class="card-number">01</div>
+      <div class="card-audience">All clients · outcome-focused</div>
+      <div class="card-title">What AppySentinel Does</div>
+      <div class="card-desc">Problem, analogy, four properties, what you get when it's running, live pilots as case studies. No code.</div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a class="design-card" href="02-capabilities-and-fit/">
+      <div class="card-number">02</div>
+      <div class="card-audience">Tech-forward clients · AI-aware</div>
+      <div class="card-title">Capabilities & Fit</div>
+      <div class="card-desc">What it can collect, how your AI agents and tools talk to it, where it can push data. Good-fit guide.</div>
+      <div class="card-arrow">→</div>
+    </a>
+
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-note">appysentinel · client workspace · 2026-04-28</div>
+  </div>
+</div>
+</body>
+</html>
