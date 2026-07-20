@@ -9,7 +9,7 @@
     },
     "packages/cli": {
       "name": "create-appysentinel",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "bin": {
         "create-appysentinel": "dist/index.js",
       },
@@ -41,7 +41,7 @@
     },
     "packages/core": {
       "name": "@appydave/appysentinel-core",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "dependencies": {
         "@appydave/core": "^0.1.0",
         "ulid": "^2.3.0",
@@ -57,6 +57,7 @@
       "version": "0.1.0",
       "dependencies": {
         "@appydave/appysentinel-core": "workspace:*",
+        "@appydave/core": "^0.1.0",
       },
       "devDependencies": {
         "@appydave/appysentinel-config": "workspace:*",
