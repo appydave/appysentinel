@@ -9,7 +9,7 @@
 //
 // Pattern:
 //
-//   import { atomicWrite } from '@appydave/appysentinel-core';
+//   import { atomicWrite } from '@appydave/core';
 //   import { join } from 'node:path';
 //
 //   export async function triggerCollection(stateDir: string): Promise<void> {

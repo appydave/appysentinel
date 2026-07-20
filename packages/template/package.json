@@ -14,7 +14,8 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@appydave/appysentinel-core": "workspace:*"
+    "@appydave/appysentinel-core": "workspace:*",
+    "@appydave/core": "^0.1.0"
   },
   "devDependencies": {
     "@appydave/appysentinel-config": "workspace:*",

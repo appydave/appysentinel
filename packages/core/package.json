@@ -1,7 +1,7 @@
 {
   "name": "@appydave/appysentinel-core",
-  "version": "0.3.0",
-  "description": "AppySentinel runtime library — Signal envelope, event bus, createSentinel(); shared primitives (lifecycle, config, atomic write, serial queue, logger) re-exported from @appydave/core",
+  "version": "0.4.0",
+  "description": "AppySentinel runtime library — Signal envelope, event bus, createSentinel(), query result. Foundation primitives (lifecycle, config, logger, atomic-write, serial-queue) are NOT re-exported; import them from @appydave/core (one symbol, one home)",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
