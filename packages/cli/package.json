@@ -1,6 +1,6 @@
 {
   "name": "create-appysentinel",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Scaffold AppySentinel projects — per-machine, observer-only telemetry collectors",
   "type": "module",
   "bin": {
